@@ -9,6 +9,9 @@ use AuditLog\Value\AuditLog;
 use PDO;
 use PDOException;
 
+/**
+ * @internal This class should not be used outside the AuditLog module
+ */
 class AuditLogRepository
 {
     public function __construct(
