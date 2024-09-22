@@ -19,7 +19,7 @@ class AuditLogRepository
     ) {
     }
 
-    public function logAction(AuditLog $auditLog): void
+    public function save(AuditLog $auditLog): void
     {
 
         try {

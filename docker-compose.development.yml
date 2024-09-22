@@ -1,0 +1,57 @@
+services:
+  php-cli:
+    build:
+      context: .
+      dockerfile: docker/php-cli/Dockerfile
+    container_name: 'php-cli-auditlog'
+    init: true
+    environment:
+      - APP_ENV=development
+      - MYSQL_HOST=mysql-auditlog
+      - MYSQL_DATABASE=audit_log
+      - MYSQL_USER=testing
+      - MYSQL_PASSWORD=1234
+    volumes:
+      - ./:/app:rwx
+    networks:
+      - auditlog-network
+
+  mysql:
+    image: mysql
+    container_name: 'mysql-auditlog'
+    hostname: mysql-auditlog
+    environment:
+      MYSQL_DATABASE: 'audit_log'
+      MYSQL_USER: 'testing'
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: '1234'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - auditLogData:/var/lib/mysql:rw
+      - ./data/mysql:/docker-entrypoint-initdb.d/:ro
+    networks:
+      - auditlog-network
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: 'pma-auditlog'
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql-auditlog
+      PMA_PORT: 3306
+      PMA_ARBITRAY: 1
+    ports:
+      - '8081:80'
+    networks:
+      - auditlog-network
+
+volumes:
+  auditLogData:
+
+networks:
+  auditlog-network:
+    driver: bridge

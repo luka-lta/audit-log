@@ -23,7 +23,7 @@ class AuditLogService
         string $oldValue,
         string $newValue
     ): void {
-        $this->auditLogRepository->logAction(
+        $this->auditLogRepository->save(
             AuditLog::from(
                 $action,
                 $userId,
